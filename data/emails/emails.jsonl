@@ -1,0 +1,23 @@
+[
+      {
+        from: "hr@megacorp.com",
+        subject: "Welcome Aboard!",
+        time: "9:03 AM",
+        body: "We're excited to have you on board. Please read the attached employee handbook.",
+        responses: ["Thanks! Excited to join.", "Can I have a raise already?", "Ignore"]
+      },
+      {
+        from: "finance@megacorp.com",
+        subject: "Your Expense Report",
+        time: "10:15 AM",
+        body: "We noticed discrepancies in your submitted expenses. Please review them by end of day.",
+        responses: ["I'll fix them ASAP.", "They're accurate as-is.", "What discrepancies?"]
+      },
+      {
+        from: "boss@megacorp.com",
+        subject: "URGENT: TPS Report",
+        time: "10:45 AM",
+        body: "Where is your TPS report? It was due yesterday.",
+        responses: ["Sending it now.", "I submitted it already.", "I thought we weren’t doing those anymore."]
+      }
+    ]

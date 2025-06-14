@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Inbox Simulator</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+
+    header {
+      background-color: #333;
+      color: white;
+      padding: 10px;
+      text-align: center;
+    }
+
+    .container {
+      display: flex;
+      flex: 1;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      width: 30%;
+      background-color: #eee;
+      border-right: 1px solid #ccc;
+      padding: 10px;
+      overflow-y: auto;
+    }
+
+    .email-item {
+      padding: 10px;
+      margin-bottom: 8px;
+      background-color: white;
+      border: 1px solid #ccc;
+      cursor: pointer;
+    }
+
+    .email-item.unread {
+      font-weight: bold;
+    }
+
+    .main {
+      flex: 1;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .email-header {
+      margin-bottom: 10px;
+    }
+
+    .email-body {
+      background-color: white;
+      padding: 15px;
+      border: 1px solid #ccc;
+      flex: 1;
+      margin-bottom: 10px;
+    }
+
+    .response-buttons {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .response-buttons button {
+      padding: 10px 15px;
+      font-size: 14px;
+      border: none;
+      cursor: pointer;
+      background-color: #ddd;
+      border-radius: 4px;
+    }
+
+    .response-buttons button:hover {
+      background-color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📧 Inbox Simulator</h1>
+  </header>
+
+  <div class="container">
+    <div class="sidebar">
+      <div class="email-item unread" onclick="openEmail(0)">
+        <strong>HR Dept</strong><br>
+        Welcome Aboard! - 9:03 AM
+      </div>
+      <div class="email-item" onclick="openEmail(1)">
+        Finance<br>
+        Your Expense Report - 10:15 AM
+      </div>
+      <div class="email-item unread" onclick="openEmail(2)">
+        Boss<br>
+        URGENT: TPS Report - 10:45 AM
+      </div>
+    </div>
+
+    <div class="main">
+      <div class="email-header">
+        <strong>From:</strong> <span id="email-from">Select an email</span><br>
+        <strong>Subject:</strong> <span id="email-subject"></span><br>
+        <strong>Time:</strong> <span id="email-time"></span>
+      </div>
+
+      <div class="email-body" id="email-body">
+        Click an email on the left to view.
+      </div>
+
+      <div class="response-buttons" id="email-responses">
+        <!-- Buttons appear here dynamically -->
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const emails = [
+      {
+        from: "hr@megacorp.com",
+        subject: "Welcome Aboard!",
+        time: "9:03 AM",
+        body: "We're excited to have you on board. Please read the attached employee handbook.",
+        responses: ["Thanks! Excited to join.", "Can I have a raise already?", "Ignore"]
+      },
+      {
+        from: "finance@megacorp.com",
+        subject: "Your Expense Report",
+        time: "10:15 AM",
+        body: "We noticed discrepancies in your submitted expenses. Please review them by end of day.",
+        responses: ["I'll fix them ASAP.", "They're accurate as-is.", "What discrepancies?"]
+      },
+      {
+        from: "boss@megacorp.com",
+        subject: "URGENT: TPS Report",
+        time: "10:45 AM",
+        body: "Where is your TPS report? It was due yesterday.",
+        responses: ["Sending it now.", "I submitted it already.", "I thought we weren’t doing those anymore."]
+      }
+    ];
+
+    function openEmail(index) {
+      const email = emails[index];
+      document.getElementById("email-from").textContent = email.from;
+      document.getElementById("email-subject").textContent = email.subject;
+      document.getElementById("email-time").textContent = email.time;
+      document.getElementById("email-body").textContent = email.body;
+
+      const responseContainer = document.getElementById("email-responses");
+      responseContainer.innerHTML = "";
+
+      email.responses.forEach(response => {
+        const btn = document.createElement("button");
+        btn.textContent = response;
+        btn.onclick = () => alert(`You replied: "${response}"`);
+        responseContainer.appendChild(btn);
+      });
+
+      // Optionally mark email as read
+      const items = document.getElementsByClassName("email-item");
+      items[index].classList.remove("unread");
+    }
+  </script>
+</body>
+</html>
