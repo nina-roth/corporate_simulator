@@ -1,28 +1,20 @@
-import webview
-import logging
-from API.email_api import InboxAPI
-from API.chat_api import ChatAPI
+from PyQt5.QtWidgets import QApplication
+import sys
+from views.main_window import MainWindow
+from models.game_state import GameState, StateClass, PlayerStats, ScoreClass
 
 if __name__ == '__main__':
-    # Configure logging
-    logging.basicConfig(
-        level=logging.DEBUG,
-        format='%(asctime)s - %(levelname)s - %(message)s'
-    )
-    logger = logging.getLogger('corporate_simulator')
-    
-    # Enable webview debug mode
-    webview.logger.level = logging.DEBUG
+    app = QApplication(sys.argv)
 
-    api = {
-        "email_inbox": InboxAPI(),
-        "chat": ChatAPI()
-    }
-    
-    logger.debug('Starting application...')
-    window = webview.create_window(
-        "Corporate Dashboard",
-        "index.html",
-        js_api=api
+    player_id = "1"
+    initial_score = ScoreClass(morale=100, reputation=100, stress=0, salary=50000)
+    initial_state = StateClass(
+        PlayerStats("Test Player", player_id, initial_score),
+        game_progress={},
+        event_timer=10
     )
-    webview.start(debug=True)
+    GameState.initialize_game_state("Test Game", initial_state)
+
+    win = MainWindow()
+    win.show()
+    sys.exit(app.exec_())
