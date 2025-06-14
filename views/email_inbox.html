@@ -1,0 +1,82 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Inbox Simulator</title>
+  <style>
+    body { margin: 0; font-family: sans-serif; background-color: #f4f4f4; display: flex; flex-direction: column; height: 100vh; }
+    header { background-color: #333; color: white; padding: 10px; text-align: center; }
+    .container { display: flex; flex: 1; overflow: hidden; }
+    .sidebar { width: 30%; background-color: #eee; border-right: 1px solid #ccc; padding: 10px; overflow-y: auto; }
+    .email-item { padding: 10px; margin-bottom: 8px; background-color: white; border: 1px solid #ccc; cursor: pointer; }
+    .email-item.unread { font-weight: bold; }
+    .main { flex: 1; padding: 10px; display: flex; flex-direction: column; }
+    .email-header { margin-bottom: 10px; }
+    .email-body { background-color: white; padding: 15px; border: 1px solid #ccc; flex: 1; margin-bottom: 10px; }
+    .response-buttons { display: flex; gap: 10px; flex-wrap: wrap; }
+    .response-buttons button { padding: 10px 15px; font-size: 14px; border: none; cursor: pointer; background-color: #ddd; border-radius: 4px; }
+    .response-buttons button:hover { background-color: #ccc; }
+  </style>
+</head>
+<body>
+  <header><h1>📧 Inbox Simulator</h1></header>
+  <div class="container">
+    <div class="sidebar">
+      <div class="email-item unread" onclick="openEmail(0)">HR Dept<br>Welcome Aboard! - 9:03 AM</div>
+      <div class="email-item" onclick="openEmail(1)">Finance<br>Your Expense Report - 10:15 AM</div>
+      <div class="email-item unread" onclick="openEmail(2)">Boss<br>URGENT: TPS Report - 10:45 AM</div>
+    </div>
+    <div class="main">
+      <div class="email-header">
+        <strong>From:</strong> <span id="email-from">Select an email</span><br>
+        <strong>Subject:</strong> <span id="email-subject"></span><br>
+        <strong>Time:</strong> <span id="email-time"></span>
+      </div>
+      <div class="email-body" id="email-body">Click an email on the left to view.</div>
+      <div class="response-buttons" id="email-responses"></div>
+    </div>
+  </div>
+  <script>
+    let emails = [];
+    // open email, display its contents and response options
+    // response uses the python API function
+    function openEmail(index) {
+      const email = emails[index];
+      document.getElementById("email-from").textContent = email.from;
+      document.getElementById("email-subject").textContent = email.subject;
+      document.getElementById("email-time").textContent = email.time;
+      document.getElementById("email-body").textContent = email.body;
+      const responseContainer = document.getElementById("email-responses");
+      responseContainer.innerHTML = "";
+      email.responses.forEach(response => {
+        const btn = document.createElement("button");
+        btn.textContent = response;
+        //btn.onclick = () => window.pywebview.api.reply(index, response);
+        btn.onclick = () => window.pywebview.api.email_inbox.reply_email(index, response);
+        responseContainer.appendChild(btn);
+      });
+      document.getElementsByClassName("email-item")[index].classList.remove("unread");
+    }
+
+    //load emails (using the python API function)
+    async function loadEmails() {
+      emails = await window.pywebview.api.email_inbox.get_emails();
+      const sidebar = document.querySelector(".sidebar");
+      sidebar.innerHTML = "";
+      emails.forEach((email, index) => {
+        const item = document.createElement("div");
+        item.className = "email-item unread";
+        item.innerHTML = `${email.from}<br>${email.subject} - ${email.time}`;
+        item.onclick = () => openEmail(index);
+        sidebar.appendChild(item);
+      });
+    }
+  
+  //general setup
+  function setupEmailView() {
+    loadEmails();
+  }
+  </script>
+</body>
+</html>
