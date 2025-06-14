@@ -9,11 +9,11 @@ if __name__ == '__main__':
     player_id = "1"
     initial_score = ScoreClass(morale=100, reputation=100, stress=0, salary=50000)
     initial_state = StateClass(
-        PlayerStats("Test Player", player_id, initial_score),
+        PlayerStats("Test_Player", player_id, initial_score),
         game_progress={},
         event_timer=10
     )
-    GameState.initialize_game_state("Test Game", initial_state)
+    GameState.initialize_game_state("Test_Game", initial_state)
 
     win = MainWindow()
     win.show()

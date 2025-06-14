@@ -1,0 +1,18 @@
+{
+    "player_id": "1",
+    "game_id": "Test_Game",
+    "state": {
+        "player_stats": {
+            "player_name": "Test_Player",
+            "player_id": "1",
+            "score": {
+                "morale": 100,
+                "reputation": 100,
+                "stress": 0,
+                "salary": 50000
+            }
+        },
+        "game_progress": {},
+        "event_timer": 10
+    }
+}

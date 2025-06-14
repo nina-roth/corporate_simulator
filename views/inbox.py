@@ -8,8 +8,10 @@ from models.email import EmailManager, Email, EmailStatus
 from models.game_state import GameState
 
 class InboxApp(QWidget):
-    def __init__(self):
+    def __init__(self, main_window=None):
         super().__init__()
+
+        self.main_window = main_window
 
         self.email_manager = EmailManager()
         self.email_manager.load_emails()
@@ -45,7 +47,7 @@ class InboxApp(QWidget):
         return main_layout
 
     def get_navigation_bar(self):
-        return create_navigation_bar(self)
+        return create_navigation_bar(self, self.main_window)
     
     def get_stats_bar(self):
         return create_stats_bar(self)
@@ -117,4 +119,8 @@ class InboxApp(QWidget):
 
     def refresh_stats(self):
         update_stats_bar(self)
+
+    def refresh_ui(self):
+        self.refresh_email_list()
+        self.refresh_stats()
 

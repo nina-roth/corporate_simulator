@@ -1,8 +1,9 @@
-from PyQt5.QtWidgets import QMainWindow, QStackedWidget
+from PyQt5.QtWidgets import QMainWindow, QStackedWidget, QMessageBox
 from .select_view import SelectViews
 from .inbox import InboxApp
 from .chat import ChatApp
 from .other import OtherApp
+from models.game_state import GameState
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -16,11 +17,11 @@ class MainWindow(QMainWindow):
         # Create and add views
         self.select_view = SelectViews()
         self.select_view.setObjectName("Select View")
-        self.inbox_view = InboxApp()
+        self.inbox_view = InboxApp(main_window=self)
         self.inbox_view.setObjectName("Inbox")
-        self.chat_view = ChatApp()
+        self.chat_view = ChatApp(main_window=self)
         self.chat_view.setObjectName("Chat")
-        self.other_view = OtherApp()
+        self.other_view = OtherApp(main_window=self)
         self.other_view.setObjectName("Other")
         
         self.stacked_widget.addWidget(self.select_view)
@@ -43,3 +44,52 @@ class MainWindow(QMainWindow):
             self.stacked_widget.setCurrentWidget(self.other_view)
         elif view_name == "Main Menu":
             self.stacked_widget.setCurrentWidget(self.select_view)
+
+    def save_game(self):
+        try:
+            game_state = GameState.get_instance()
+            game_state.save_state()
+            QMessageBox.information(self, "Success", "Game saved successfully!")
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Failed to save game: {str(e)}")
+
+    def load_game(self):
+        try:
+            game_state = GameState.get_instance()
+            # For now, we'll use the current game_id and player_id
+            game_state.load_state(game_state.game_id, game_state.state.player_stats.player_id)
+            QMessageBox.information(self, "Success", "Game loaded successfully!")
+            # Refresh the current view
+            current_widget = self.stacked_widget.currentWidget()
+            if hasattr(current_widget, 'refresh_ui'):
+                current_widget.refresh_ui()
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Failed to load game: {str(e)}")
+
+    #future enhancement, but still broken
+    # def load_game_with_dialog(self):
+    #     from PyQt5.QtWidgets import QFileDialog
+    #     import os
+        
+    #     save_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "save_files")
+    #     file_path, _ = QFileDialog.getOpenFileName(
+    #         parent,
+    #         "Load Game",
+    #         save_dir,
+    #         "Save Files (*.json)"
+    #     )
+        
+    #     if file_path:
+    #         try:
+    #             # Extract game_id and player_id from filename
+    #             filename = os.path.basename(file_path)
+    #             game_id = filename.split('_')[0]
+    #             player_id = filename.split('_')[1]
+                
+    #             game_state = GameState.get_instance()
+    #             game_state.load_state(game_id, player_id)
+    #             QMessageBox.information(parent, "Success", "Game loaded successfully!")
+    #             if hasattr(parent, 'refresh_ui'):
+    #                 parent.refresh_ui()
+    #         except Exception as e:
+    #             QMessageBox.critical(parent, "Error", f"Failed to load game: {str(e)}")

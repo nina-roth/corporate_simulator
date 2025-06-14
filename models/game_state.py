@@ -1,4 +1,5 @@
 import json
+import os
 import logging
 from dataclasses import dataclass
 
@@ -41,6 +42,13 @@ class StateClass:
             raise TypeError("game_progress must be a dictionary")
         if not isinstance(self.event_timer, int):
             raise TypeError("event_timer must be an integer")
+        
+    def to_dict(self):
+        return {
+            "player_stats": self.player_stats.to_dict() if self.player_stats else None,
+            "game_progress": self.game_progress,
+            "event_timer": self.event_timer
+        }
 
 class GameState():
     _instance = None
@@ -60,6 +68,8 @@ class GameState():
     def __init__(self, game_id: str, state: StateClass):
         self.game_id = game_id
         self.state = state
+        save_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "save_files")
+        self.save_path = os.path.join(save_dir, f"{self.game_id}_{self.state.player_stats.player_id}_state.json")
 
     def setup_player(self, player_name: str, player_id: str, score: ScoreClass):
         self.state.player_stats = PlayerStats(player_name, player_id, score)
@@ -74,13 +84,13 @@ class GameState():
         self.state.player_stats.score.salary += salary
 
     def __repr__(self):
-        return f"GameState(player_id={self.player_id}, game_id={self.game_id}, state={self.state})"
+        return f"GameState(player_id={self.state.player_stats.player_id}, game_id={self.game_id}, state={self.state})"
 
     def to_dict(self):
         return {
-            "player_id": self.player_id,
+            "player_id": self.state.player_stats.player_id,
             "game_id": self.game_id,
-            "state": self.state
+            "state": self.state.to_dict()
         }
     
     @property
@@ -97,19 +107,48 @@ class GameState():
     
     def save_state(self):
         # Placeholder for save logic, e.g., saving to a database or file
-        print(f"Saving game state for player {self.player_id} in game {self.game_id}")
-        with open(f"../data/save_files/{self.game_id}_{self.player_id}_state.json", "w") as f:
+        print(f"save path: {self.save_path}")
+        print(f"Saving game state for player {self.state.player_stats.player_id} in game {self.game_id}")
+        
+        with open(self.save_path, "w") as f:
             json.dump(self.to_dict(), f, indent=4)
 
     def load_state(self, game_id: str, player_id: str):
         # Placeholder for load logic, e.g., loading from a database or file
+        print(f"Loading game state for player {player_id} in game {game_id}")
+        print(f"load path: {self.save_path}")
         try:
-            with open(f"../data/save_files/{game_id}_{player_id}_state.json", "r") as f:
+            with open(self.save_path, "r") as f:
                 data = json.load(f)
-                self.player_id = data["player_id"]
+                #self.player_id = data["player_id"]
                 self.game_id = data["game_id"]
-                self.state = StateClass(**data["state"])
-            print(f"Loaded game state for player {self.player_id} in game {self.game_id}")
+                            # Reconstruct nested objects properly
+                state_data = data["state"]
+                player_stats_data = state_data["player_stats"]
+                score_data = player_stats_data["score"]
+                
+                # Create ScoreClass instance
+                score = ScoreClass(
+                    morale=score_data["morale"],
+                    reputation=score_data["reputation"],
+                    stress=score_data["stress"],
+                    salary=score_data["salary"]
+                )
+                
+                # Create PlayerStats instance
+                player_stats = PlayerStats(
+                    player_name=player_stats_data["player_name"],
+                    player_id=player_stats_data["player_id"],
+                    score=score
+                )
+                
+                # Create StateClass instance
+                self.state = StateClass(
+                    player_stats=player_stats,
+                    game_progress=state_data["game_progress"],
+                    event_timer=state_data["event_timer"]
+                )
+            print(f"Loaded game state for player {self.state.player_stats.player_id} in game {self.game_id}")
         except FileNotFoundError:
             logging.error(f"Game state file not found for player {player_id} in game {game_id}.")
             return None
