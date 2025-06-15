@@ -1,0 +1,27 @@
+{
+    "fixed_events": [
+        {
+            "id": "promotion",
+            "title": "You got a promotion!",
+            "description": "All your hard work(?) has paid off and you have been promoted to a higher position.",
+            "choices": [
+                {
+                    "text": "Make a post on social media",
+                    "effects": {
+                        "reputation": 10,
+                        "morale": 10,
+                        "salary": 5000
+                    }
+                },
+                {
+                    "text": "Keep quiet and focus on your new role",
+                    "effects": {
+                        "reputation": -5,
+                        "stress": 5,
+                        "salary": 5000
+                    }
+                }
+            ]
+        }
+    ]
+}

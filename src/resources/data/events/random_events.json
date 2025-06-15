@@ -20,6 +20,21 @@
                     }
                 }
             ]
+        },
+        {
+            "id": "boss_holiday",
+            "title": "Your Boss is on Holiday",
+            "description": "Your boss is on holiday and you have to manage the team",
+            "choices": [
+                {
+                    "text": "Do your best",
+                    "effects": {
+                        "stress": 10,
+                        "morale": -5,
+                        "reputation": 5
+                    }
+                }
+            ]
         }
     ]
 }

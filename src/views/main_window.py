@@ -4,6 +4,7 @@ from .inbox import InboxApp
 from .chat import ChatApp
 from .other import OtherApp
 from models.game_state import GameState
+from .components.event_dialog import EventDialog
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -65,6 +66,10 @@ class MainWindow(QMainWindow):
                 current_widget.refresh_ui()
         except Exception as e:
             QMessageBox.critical(self, "Error", f"Failed to load game: {str(e)}")
+
+    def show_event(self, event):
+        dialog = EventDialog(self, event)
+        dialog.exec_()
 
     #future enhancement, but still broken
     # def load_game_with_dialog(self):

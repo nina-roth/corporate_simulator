@@ -70,6 +70,19 @@ class GameState():
         self.state = state
         save_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "resources", "data", "save_files")
         self.save_path = os.path.join(save_dir, f"{self.game_id}_{self.state.player_stats.player_id}_state.json")
+        self.events = self.load_events()
+
+    def load_events(self):
+        with open(os.path.join(os.path.dirname(os.path.dirname(__file__)), "resources", "data", "events", "random_events.json"), 'r') as f:
+            random_events = json.load(f)
+        with open(os.path.join(os.path.dirname(os.path.dirname(__file__)), "resources", "data", "events", "fixed_events.json"), 'r') as f:
+            fixed_events = json.load(f)
+
+        print("loaded events files")
+        return {
+            "random_events": random_events["random_events"],
+            "fixed_events": fixed_events["fixed_events"]
+        }
 
     def setup_player(self, player_name: str, player_id: str, score: ScoreClass):
         self.state.player_stats = PlayerStats(player_name, player_id, score)

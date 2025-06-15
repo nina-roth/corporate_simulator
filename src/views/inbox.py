@@ -106,6 +106,8 @@ class InboxApp(QWidget):
             )
         self.refresh_email_list()
         self.refresh_stats()
+        print("RE", type(game_state.events["random_events"]), len(game_state.events["random_events"]))
+        self.main_window.show_event(game_state.events["random_events"][0])  # Example to show an event dialog
 
     def refresh_email_list(self):
         self.list_widget.clear()
