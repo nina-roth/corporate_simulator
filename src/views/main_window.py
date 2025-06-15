@@ -71,7 +71,7 @@ class MainWindow(QMainWindow):
     #     from PyQt5.QtWidgets import QFileDialog
     #     import os
         
-    #     save_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "save_files")
+    #     save_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "resources", "data", "save_files")
     #     file_path, _ = QFileDialog.getOpenFileName(
     #         parent,
     #         "Load Game",

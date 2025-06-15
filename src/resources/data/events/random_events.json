@@ -1,0 +1,25 @@
+{
+    "random_events": [
+        {
+            "id": "coffee_spill",
+            "title": "Coffee Accident",
+            "description": "You accidentally spilled coffee on your keyboard",
+            "choices": [
+                {
+                    "text": "Clean it yourself",
+                    "effects": {
+                        "stress": 10,
+                        "morale": -5
+                    }
+                },
+                {
+                    "text": "Ask IT for a new keyboard",
+                    "effects": {
+                        "reputation": -5,
+                        "stress": 5
+                    }
+                }
+            ]
+        }
+    ]
+}

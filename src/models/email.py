@@ -35,7 +35,7 @@ class EmailManager:
     def load_emails(self):
         try:
             base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-            emails_path = os.path.join(base_dir, 'data', 'emails', 'emails.jsonl')
+            emails_path = os.path.join(base_dir, 'resources', 'data', 'emails', 'emails.jsonl')
             with open(emails_path, "r") as f:
                 for line in f:
                     email_data = json.loads(line)

@@ -1,0 +1,21 @@
+{
+    "positions": [
+        {
+            "title": "Junior Developer",
+            "base_salary": 50000,
+            "requirements": {
+                "experience": 0,
+                "skills": ["coding"]
+            },
+            "next_positions": ["Senior Developer", "Project Manager"]
+        },
+        {
+            "title": "Senior Developer",
+            "base_salary": 90000,
+            "requirements": {
+                "experience": 3,
+                "skills": ["coding", "mentoring"]
+            }
+        }
+    ]
+}

@@ -68,7 +68,7 @@ class GameState():
     def __init__(self, game_id: str, state: StateClass):
         self.game_id = game_id
         self.state = state
-        save_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "data", "save_files")
+        save_dir = os.path.join(os.path.dirname(os.path.dirname(__file__)), "resources", "data", "save_files")
         self.save_path = os.path.join(save_dir, f"{self.game_id}_{self.state.player_stats.player_id}_state.json")
 
     def setup_player(self, player_name: str, player_id: str, score: ScoreClass):
