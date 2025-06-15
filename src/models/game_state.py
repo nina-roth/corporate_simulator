@@ -1,5 +1,6 @@
 import json
 import os
+import random
 import logging
 from dataclasses import dataclass
 
@@ -137,10 +138,16 @@ class GameState():
         for trigger in triggers:
             self._handle_trigger(trigger)
 
-    def _handle_trigger(self, trigger: str):
+        if not triggers:
+            #chance for a random event trigger
+            if random.random() < 0.5:
+                random_event = random.choice(self.events["random_events"])
+                self._handle_trigger(random_event["id"], random_event=True)
+
+    def _handle_trigger(self, trigger: str, random_event: bool = False):
         """Handle different types of triggers"""
         
-        event = self._get_event_by_id(trigger)
+        event = self._get_event_by_id(trigger, random_event=random_event)
         if event:
             from views.main_window import MainWindow
             from PyQt5.QtWidgets import QApplication
@@ -152,11 +159,16 @@ class GameState():
         else:
             logging.warning(f"No event found for fixed trigger: {trigger}")
 
-    def _get_event_by_id(self, event_id: str) -> dict:
+    def _get_event_by_id(self, event_id: str, random_event: bool = False) -> dict:
         """Retrieve an event by its ID from the loaded events"""
-        for event in self.events["fixed_events"]:
-            if event.get("id") == event_id:
-                return event
+        if random_event:
+            for event in self.events["random_events"]:
+                if event.get("id") == event_id:
+                    return event
+        else:
+            for event in self.events["fixed_events"]:
+                if event.get("id") == event_id:
+                    return event
         return None
 
     def apply_event_effects(self, effects: dict):

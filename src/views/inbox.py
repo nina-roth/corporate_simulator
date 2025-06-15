@@ -5,7 +5,7 @@ from PyQt5.QtWidgets import (
 import random
 from .components.navigation_bar import create_navigation_bar
 from .components.stats_bar import create_stats_bar, update_stats_bar
-from models.email import EmailManager, Email, EmailStatus
+from models.email import EmailManager
 from models.game_state import GameState
 
 class InboxApp(QWidget):
@@ -106,11 +106,6 @@ class InboxApp(QWidget):
                 stress=consequences.get("stress", 0),
                 salary=consequences.get("salary", 0)
             )
-        #todo: implement proper trigger in the right place
-        if random.random() < 0.1:
-            game_state = GameState.get_instance()
-            random_event = random.choice(game_state.events["random_events"])
-            self.main_window.show_event(random_event) 
         self.refresh_email_list()
         self.refresh_stats()
 
