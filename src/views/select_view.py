@@ -12,7 +12,7 @@ class SelectViews(QWidget):
         self.resize(400, 300)
 
         self.list_widget = QListWidget()
-        self.list_widget.addItems(["Inbox", "Chat", "Other"])
+        self.list_widget.addItems(["Inbox", "Chat", "Other", "Minesweeper"])
 
         self.description_label = QLabel("Select a view from the list above.")
 

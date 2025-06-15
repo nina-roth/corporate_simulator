@@ -3,6 +3,7 @@ from .select_view import SelectViews
 from .inbox import InboxApp
 from .chat import ChatApp
 from .other import OtherApp
+from .minesweeper import Minesweeper
 from models.game_state import GameState
 from .components.event_dialog import EventDialog
 
@@ -24,11 +25,14 @@ class MainWindow(QMainWindow):
         self.chat_view.setObjectName("Chat")
         self.other_view = OtherApp(main_window=self)
         self.other_view.setObjectName("Other")
+        self.minesweeper_view = Minesweeper(difficulty="easy") #todo: import difficulty setting
+        self.minesweeper_view.setObjectName("Minesweeper")
         
         self.stacked_widget.addWidget(self.select_view)
         self.stacked_widget.addWidget(self.inbox_view)
         self.stacked_widget.addWidget(self.chat_view)
         self.stacked_widget.addWidget(self.other_view)
+        self.stacked_widget.addWidget(self.minesweeper_view)
         
         # Set central widget
         self.setCentralWidget(self.stacked_widget)
@@ -45,6 +49,8 @@ class MainWindow(QMainWindow):
             self.stacked_widget.setCurrentWidget(self.other_view)
         elif view_name == "Main Menu":
             self.stacked_widget.setCurrentWidget(self.select_view)
+        elif view_name == "Minesweeper":
+            self.stacked_widget.setCurrentWidget(self.minesweeper_view)
 
     def save_game(self):
         try:
