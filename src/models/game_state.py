@@ -10,6 +10,22 @@ class ScoreClass:
     stress: int
     salary: float
 
+    MAX_REPUTATION = 150
+    MAX_MORALE = 100
+    MAX_STRESS = 100
+    MIN_SALARY = 30000
+    MAX_SALARY = 1000000
+
+    def __post_init__(self):
+        self._validate_and_constrain_scores()
+
+    def _validate_and_constrain_scores(self):
+        """Enforce score limits"""
+        self.reputation = min(max(0, self.reputation), self.MAX_REPUTATION)
+        self.morale = min(max(0, self.morale), self.MAX_MORALE)
+        self.stress = min(max(0, self.stress), self.MAX_STRESS)
+        self.salary = min(max(self.MIN_SALARY, self.salary), self.MAX_SALARY)
+
     def to_dict(self):
         return {
             "morale": self.morale,
@@ -95,6 +111,53 @@ class GameState():
         self.state.player_stats.score.reputation += reputation
         self.state.player_stats.score.stress += stress
         self.state.player_stats.score.salary += salary
+
+         # Enforce constraints
+        self.state.player_stats.score._validate_and_constrain_scores()
+
+        # Check triggers
+        self._check_score_triggers()
+    
+    def _check_score_triggers(self):
+        """Check for score-based event triggers"""
+        score = self.state.player_stats.score
+        triggers = []
+
+        # Add trigger conditions
+        if score.morale <= 0:
+            triggers.append("low_morale")
+        if score.stress >= 30:
+            triggers.append("high_stress")
+        if score.reputation <= 0:
+            triggers.append("no_reputation")
+        if score.salary > 100_000:
+            triggers.append("high_salary")
+        
+        # Handle triggers
+        for trigger in triggers:
+            self._handle_trigger(trigger)
+
+    def _handle_trigger(self, trigger: str):
+        """Handle different types of triggers"""
+        
+        event = self._get_event_by_id(trigger)
+        if event:
+            from views.main_window import MainWindow
+            from PyQt5.QtWidgets import QApplication
+            # Get the main window instance - you might need to modify this
+            # based on how you want to handle the reference to the main window
+            main_window = QApplication.activeWindow()
+            if isinstance(main_window, MainWindow):
+                main_window.show_event(event)
+        else:
+            logging.warning(f"No event found for fixed trigger: {trigger}")
+
+    def _get_event_by_id(self, event_id: str) -> dict:
+        """Retrieve an event by its ID from the loaded events"""
+        for event in self.events["fixed_events"]:
+            if event.get("id") == event_id:
+                return event
+        return None
 
     def apply_event_effects(self, effects: dict):
         """Apply the effects of an event choice to the player's stats"""

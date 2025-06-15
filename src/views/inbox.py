@@ -107,9 +107,10 @@ class InboxApp(QWidget):
                 salary=consequences.get("salary", 0)
             )
         #todo: implement proper trigger in the right place
-        if rand < 0.1:
+        if random.random() < 0.1:
             game_state = GameState.get_instance()
-            self.main_window.show_event(game_state.events["random_events"][0]) 
+            random_event = random.choice(game_state.events["random_events"])
+            self.main_window.show_event(random_event) 
         self.refresh_email_list()
         self.refresh_stats()
 

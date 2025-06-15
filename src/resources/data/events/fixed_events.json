@@ -22,6 +22,51 @@
                     }
                 }
             ]
+        },
+        {
+            "id": "high_stress",
+            "title": "Burnout Warning",
+            "description": "You're showing signs of burnout... take a break or risk your health.",
+            "choices": [
+                {
+                    "text": "Take a 3 month sabbatical",
+                    "effects": {
+                        "morale": 50,
+                        "salary": -5000,
+                        "reputation": -20
+                    }
+                },
+                {
+                    "text": "Just gotta work harder",
+                    "effects": {
+                        "reputation": 20,
+                        "stress": 50,
+                        "morale": -30,
+                        "salary": 5000
+                    }
+                }
+            ]
+        },
+        {
+            "id": "high_salary",
+            "title": "Tax Audit",
+            "description": "Your high salary has attracted the attention of tax authorities. They want to audit your finances.",
+            "choices": [
+                {
+                    "text": "Be honest and cooperate",
+                    "effects": {
+                        "morale": -10,
+                        "salary": -2000
+                    }
+                },
+                {
+                    "text": "Hide your cryptocurrency investments",
+                    "effects": {
+                        "stress": 10,
+                        "salary": 2000
+                    }
+                }
+            ]
         }
     ]
 }
