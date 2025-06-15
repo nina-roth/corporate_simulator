@@ -2,6 +2,7 @@ from PyQt5.QtWidgets import (
     QWidget, QVBoxLayout, QHBoxLayout,
     QListWidget, QLabel, QTextEdit, QPushButton
 )
+import random
 from .components.navigation_bar import create_navigation_bar
 from .components.stats_bar import create_stats_bar, update_stats_bar
 from models.email import EmailManager, Email, EmailStatus
@@ -25,8 +26,9 @@ class InboxApp(QWidget):
 
     def setup_ui_components(self):
         self.list_widget = QListWidget()
+        # Replace the simple list population with the status marker version
         for email in self.email_manager.emails:
-            self.list_widget.addItem(f"{email.subject} ({email.sender})")
+            self.list_widget.addItem(f"{email.status.marker} {email.subject} ({email.sender})")
         self.list_widget.currentRowChanged.connect(self.load_email)
 
         self.sender_label = QLabel("Sender:")
@@ -104,20 +106,17 @@ class InboxApp(QWidget):
                 stress=consequences.get("stress", 0),
                 salary=consequences.get("salary", 0)
             )
+        #todo: implement proper trigger in the right place
+        if rand < 0.1:
+            game_state = GameState.get_instance()
+            self.main_window.show_event(game_state.events["random_events"][0]) 
         self.refresh_email_list()
         self.refresh_stats()
-        print("RE", type(game_state.events["random_events"]), len(game_state.events["random_events"]))
-        self.main_window.show_event(game_state.events["random_events"][0])  # Example to show an event dialog
 
     def refresh_email_list(self):
         self.list_widget.clear()
         for email in self.email_manager.emails:
-            status_marker = {
-                EmailStatus.UNREAD: "📩",
-                EmailStatus.READ: "📨",
-                EmailStatus.ANSWERED: "✓"
-            }.get(email.status, "")
-            self.list_widget.addItem(f"{status_marker} {email.subject} ({email.sender})")
+            self.list_widget.addItem(f"{email.status.marker} {email.subject} ({email.sender})")
 
     def refresh_stats(self):
         update_stats_bar(self)

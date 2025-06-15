@@ -69,7 +69,22 @@ class MainWindow(QMainWindow):
 
     def show_event(self, event):
         dialog = EventDialog(self, event)
+        dialog.choice_made.connect(self.handle_event_choice)
         dialog.exec_()
+
+    def handle_event_choice(self, choice: dict):
+        """Handle the effects of the event choice"""
+        try:
+            game_state = GameState.get_instance()
+            game_state.apply_event_effects(choice.get("effects", {}))
+            
+            # Refresh the current view if it has a refresh method
+            current_widget = self.stacked_widget.currentWidget()
+            if hasattr(current_widget, 'refresh_ui'):
+                current_widget.refresh_ui()
+                
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Failed to apply event effects: {str(e)}")
 
     #future enhancement, but still broken
     # def load_game_with_dialog(self):

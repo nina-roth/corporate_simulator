@@ -8,6 +8,14 @@ class EmailStatus(Enum):
     UNREAD = "unread"
     READ = "read"
     ANSWERED = "answered"
+    
+    @property
+    def marker(self) -> str:
+        return {
+            EmailStatus.UNREAD: "📩",
+            EmailStatus.READ: "📨",
+            EmailStatus.ANSWERED: "✓"
+        }[self]
 
 class Consequences(TypedDict):
     reputation: int

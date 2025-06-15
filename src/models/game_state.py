@@ -96,6 +96,18 @@ class GameState():
         self.state.player_stats.score.stress += stress
         self.state.player_stats.score.salary += salary
 
+    def apply_event_effects(self, effects: dict):
+        """Apply the effects of an event choice to the player's stats"""
+        if not effects:
+            return
+            
+        self.update_score(
+            morale=effects.get("morale", 0),
+            reputation=effects.get("reputation", 0),
+            stress=effects.get("stress", 0),
+            salary=effects.get("salary", 0)
+    )
+
     def __repr__(self):
         return f"GameState(player_id={self.state.player_stats.player_id}, game_id={self.game_id}, state={self.state})"
 
