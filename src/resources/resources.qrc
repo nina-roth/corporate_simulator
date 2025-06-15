@@ -1,0 +1,7 @@
+<!DOCTYPE RCC>
+<RCC>
+    <qresource prefix="/">
+        <file>images/app_icon.png</file>
+        <file>config/game_config.json</file>
+    </qresource>
+</RCC>
